@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace MiniOrm
 {
-	public class DataSource<T> where T : new()
+	public class DataSource
 	{
 		private string StrCnn { get; set; }
 
@@ -16,10 +16,10 @@ namespace MiniOrm
 			StrCnn = strCnn;
 		}
 
-		protected IEnumerable<Tx> GetEnumerable<Tx>(
+		protected IEnumerable<T> GetEnumerable<T>(
 			string sql
 			, ListParameter parametros = null
-		) where Tx : new()
+		) where T : new()
 		{
 			using (var dr = GetDataReader(sql, parametros))
 			{
@@ -31,21 +31,25 @@ namespace MiniOrm
 				{
 
 					yield return 
-						GetEntity<Tx>(
+						GetEntity<T>(
 							dr
 							, columnNames
-							, GetPublicProperties(typeof(Tx))
+							, GetPublicProperties<T>(typeof(T))
 						);
 				}
 				dr.Close();
 			}
 		}
 
-		protected IEnumerable<T> GetEnumerable(
-			string sql
-		) => 
-			GetEnumerable<T>(sql);
+		//protected IEnumerable<T> GetEnumerable(
+		//	string sql
+		//) => 
+		//	GetEnumerable<T>(sql);
 
+		protected SqlDataReader GetDataReader(
+			string sql
+		) =>
+			GetDataReader(sql, null);
 
 		protected SqlDataReader GetDataReader(
 			string sql
@@ -110,40 +114,39 @@ namespace MiniOrm
 			return cnn;
 		}
 
-		protected Tx GetEntity<Tx>(
+		protected T GetEntity<T>(
 			SqlDataReader dr
 			, List<string> columnNames
 			, List<PropertyInfo> properties			
-		) where Tx : new()
+		) where T : new()
 		{
-			var t = new Tx();
+			var t = new T();
 
 			foreach (var cn in columnNames)
 			{
-				if (DBNull.Value == dr[cn])
-				{
-					properties
-						.FirstOrDefault(p=>p.Name == cn)
-						?.SetValue(t, null);
-				}
-				else
-				{
-					properties
-						.FirstOrDefault(p => p.Name == cn)
-						?.SetValue(t, dr[cn]);
-				}
+				properties
+				.FirstOrDefault(
+					p => 
+					p.Name.ToUpper() == cn.ToUpper()
+				)
+				?.SetValue(
+					t
+					,  DBNull.Value == dr[cn] 
+						? null
+						: dr[cn]							
+				);
 			}
 			return t;
 		}
 
-		protected T GetEntity(
-			SqlDataReader dr
-			, List<string> columnNames
-			, List<PropertyInfo> properties
-		) =>
-			GetEntity<T>(dr, columnNames, properties);
+		//protected T GetEntity(
+		//	SqlDataReader dr
+		//	, List<string> columnNames
+		//	, List<PropertyInfo> properties
+		//) =>
+		//	GetEntity<T>(dr, columnNames, properties);
 
-		private List<PropertyInfo> GetPublicProperties(
+		private List<PropertyInfo> GetPublicProperties<T>(
 			Type type 
 		)
 		{
