@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace MiniOrm
+namespace MiniOrmPg
 {
 	internal static class MyExtensions
 	{
