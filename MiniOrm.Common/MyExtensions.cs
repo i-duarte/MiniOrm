@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace MiniOrm
+namespace MiniOrm.Common
 {
-	internal static class MyExtensions
+	public static class MyExtensions
 	{
 		public static IEnumerable<string> GetColumnNames(
 			this IDataReader source

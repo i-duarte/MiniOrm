@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Npgsql;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using MiniOrm.Common;
 
-namespace MiniOrmPg
+namespace MiniOrm.Sql
 {
 	public class DataSource
 	{
@@ -42,19 +42,19 @@ namespace MiniOrmPg
 			}
 		}
 
-		protected NpgsqlDataReader GetDataReader(
+		protected SqlDataReader GetDataReader(
 			string sql
 		) =>
 			GetDataReader(sql, null);
 
-		protected NpgsqlDataReader GetDataReader(
+		protected SqlDataReader GetDataReader(
 			string sql
 			, ListParameter parametros
-			, NpgsqlConnection cnn = null
+			, SqlConnection cnn = null
 		)
 		{
 			var cmd =
-				new NpgsqlCommand(
+				new SqlCommand(
 				 sql
 				 , cnn ?? GetConnection()
 			 );
@@ -76,42 +76,42 @@ namespace MiniOrmPg
 				 );
 		}
 
-		private NpgsqlParameter GetParametro(Parameter p)
+		private SqlParameter GetParametro(Parameter p)
 		{
 			switch (p.Value.GetType().ToString())
 			{
 				case "System.Byte":
-					return new NpgsqlParameter(p.Name, SqlDbType.TinyInt) { Value = (byte)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.TinyInt) { Value = (byte)p.Value };
 				case "System.Int16":
-					return new NpgsqlParameter(p.Name, SqlDbType.SmallInt) { Value = (short)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.SmallInt) { Value = (short)p.Value };
 				case "System.Int32":
-					return new NpgsqlParameter(p.Name, SqlDbType.Int) { Value = (int)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.Int) { Value = (int)p.Value };
 				case "System.DateTime":
-					return new NpgsqlParameter(p.Name, SqlDbType.DateTime) { Value = (DateTime)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.DateTime) { Value = (DateTime)p.Value };
 				case "System.Char":
-					return new NpgsqlParameter(p.Name, SqlDbType.VarChar) { Value = (string)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.VarChar) { Value = (string)p.Value };
 				case "System.String":
-					return new NpgsqlParameter(p.Name, SqlDbType.VarChar) { Value = (string)p.Value, Size = ((string)p.Value).Length };
+					return new SqlParameter(p.Name, SqlDbType.VarChar) { Value = (string)p.Value, Size = ((string)p.Value).Length };
 				case "System.Decimal":
-					return new NpgsqlParameter(p.Name, SqlDbType.Decimal) { Value = (decimal)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.Decimal) { Value = (decimal)p.Value };
 				case "System.Single":
-					return new NpgsqlParameter(p.Name, SqlDbType.Real) { Value = (float)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.Real) { Value = (float)p.Value };
 				case "System.Double":
-					return new NpgsqlParameter(p.Name, SqlDbType.Float) { Value = (string)p.Value };
+					return new SqlParameter(p.Name, SqlDbType.Float) { Value = (string)p.Value };
 				default:
 					throw new ArgumentException($"Tipo de dato inesperado {p.Value.GetType()}");
 			}
 		}
 
-		protected NpgsqlConnection GetConnection()
+		protected SqlConnection GetConnection()
 		{
-			var cnn = new NpgsqlConnection(StrCnn);
+			var cnn = new SqlConnection(StrCnn);
 			cnn.Open();
 			return cnn;
 		}
 
 		protected T GetEntity<T>(
-			NpgsqlDataReader dr
+			SqlDataReader dr
 			, List<string> columnNames
 			, List<PropertyInfo> properties			
 		) where T : new()

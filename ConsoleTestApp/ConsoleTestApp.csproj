@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MiniOrmPg\MiniOrmPg.csproj" />
+    <ProjectReference Include="..\MiniOrm.Npgsql\MiniOrm.Npgsql.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using MiniOrm.Common;
 
 namespace MiniOrm
 {
@@ -40,11 +41,6 @@ namespace MiniOrm
 				dr.Close();
 			}
 		}
-
-		//protected IEnumerable<T> GetEnumerable(
-		//	string sql
-		//) => 
-		//	GetEnumerable<T>(sql);
 
 		protected SqlDataReader GetDataReader(
 			string sql
@@ -138,13 +134,6 @@ namespace MiniOrm
 			}
 			return t;
 		}
-
-		//protected T GetEntity(
-		//	SqlDataReader dr
-		//	, List<string> columnNames
-		//	, List<PropertyInfo> properties
-		//) =>
-		//	GetEntity<T>(dr, columnNames, properties);
 
 		private List<PropertyInfo> GetPublicProperties<T>(
 			Type type 

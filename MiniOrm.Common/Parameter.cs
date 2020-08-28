@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MiniOrmPg
+namespace MiniOrm.Common
 {
 	public class Parameter
 	{

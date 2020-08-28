@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using MiniOrm.Common;
 
-namespace MiniOrmPg
+namespace MiniOrm.Npgsql
 {
 	public class DataSource
 	{

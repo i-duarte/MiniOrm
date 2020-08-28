@@ -1,7 +1,5 @@
-﻿using MiniOrmPg;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace ConsoleTestApp
 {
@@ -27,24 +25,6 @@ namespace ConsoleTestApp
 				Console.WriteLine(c.Id);
 			}
 			
-		}
-	}
-
-	internal class Cliente
-	{
-		public long Id { get; set; }
-	}
-
-	internal class Clientes : DataSource
-	{
-		public Clientes(string strCnn) : base(strCnn)
-		{
-		}
-
-		public IEnumerable<Cliente> SelectAll()
-		{
-			var sql = "SELECT * FROM clientes";
-			return GetEnumerable<Cliente>(sql);
 		}
 	}
 }

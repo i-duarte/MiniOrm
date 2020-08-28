@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MiniOrmPg
+namespace MiniOrm.Common
 {
 	public class ListParameter : List<Parameter>
 	{
