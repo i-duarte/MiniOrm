@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiniOrm.EntityFramework\MiniOrm.EntityFramework.csproj" />
+    <ProjectReference Include="..\MiniOrm.Sql\MiniOrm.Sql.csproj" />
+  </ItemGroup>
+
+</Project>
