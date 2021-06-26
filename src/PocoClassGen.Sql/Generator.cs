@@ -15,9 +15,9 @@ namespace PocoClassGen.Sql
         public static string SaltoMasIdentacionPropiedades
             => $"{Environment.NewLine}{IdentacionPropiedades}";
 
-        public Generator(IDataAdapter dataAdapter)
+        public Generator(IObjectFactory objectFactory)
         {
-            Data = new DataBaseData(dataAdapter);
+            Data = new DataBaseData(objectFactory);
         }
 
         public void GenerateClasses(
@@ -65,14 +65,14 @@ namespace PocoClassGen.Sql
             //);
         }
 
-        private static void GenerarBdClass(
-            Schema sch
-            , string nameSpace
-            , string dirPath
-        )
-        {
+        //private static void GenerarBdClass(
+        //    Schema sch
+        //    , string nameSpace
+        //    , string dirPath
+        //)
+        //{
             
-        }
+        //}
 
         private static void GenerarEntidades(
             Schema sch

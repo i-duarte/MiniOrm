@@ -7,8 +7,8 @@ namespace PocoClassGen.Sql
 {
     public class DataBaseData : DataSource
     {
-        public DataBaseData(IDataAdapter dataAdapter) 
-            : base(dataAdapter)
+        public DataBaseData(IObjectFactory objectFactory) 
+            : base(objectFactory)
         {
         }
 

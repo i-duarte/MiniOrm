@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Reflection;
 
 namespace MiniOrm.Common
@@ -17,10 +16,27 @@ namespace MiniOrm.Common
             , DbConnection cnn = null
         );
 
+        DbDataReader GetDataReader(
+            string sql
+            , ListParameter parameters
+            , DbTransaction tran 
+        );
+
+        DbDataReader GetDataReader(
+            string sql            
+            , DbTransaction tran
+        );
+
         int Execute(
             string sql
             , ListParameter parameters = null
             , DbConnection cnn = null
+        );
+
+        int Execute(
+            string sql
+            , ListParameter parameters = null
+            , DbTransaction tran= null
         );
 
     }

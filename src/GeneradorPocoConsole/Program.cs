@@ -24,8 +24,10 @@ namespace GenerardorPocoConsole
 
             var gen = 
                 new Generator(
-                    new SqlDataAdapter(
-                        $"{server}|{dataBase}{GetUserAndPassword(user,pass)}"
+                    new SqlObjectFactory(
+                        $"{server}" +
+                        $"|{dataBase}" +
+                        $"{GetUserAndPassword(user,pass)}"
                     )
                 );
 
