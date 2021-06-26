@@ -3,7 +3,7 @@
     public class FieldAttribute
         : OrmAttribute
     {
-		public bool IsPrimaryKey { get; set; }
-		public bool IsIdentity { get; set; }		
-	}
+        public bool IsPrimaryKey { get; set; }
+        public bool IsIdentity { get; set; }
+    }
 }

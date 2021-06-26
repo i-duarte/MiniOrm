@@ -1,6 +1,6 @@
 ﻿namespace MiniOrm.Common
 {
-    public interface ITableAdapter 
+    public interface ITableAdapter
         : IEntityAdapter
     {
 
@@ -17,7 +17,7 @@
 
         string CreateQueryDelete(
             string tableName
-            , ListParameter keys 
-        );
+            , ListParameter keys
+        );        
     }
 }

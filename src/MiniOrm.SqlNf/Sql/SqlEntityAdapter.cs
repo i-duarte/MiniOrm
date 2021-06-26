@@ -1,29 +1,30 @@
-﻿using System.Linq;
-using MiniOrm.Common;
+﻿using MiniOrm.Common;
+using System.Linq;
 
 namespace MiniOrm.Sql
 {
     public class SqlEntityAdapter<T>
-		: SqlDataAdapter
-			, Common.IEntityAdapter 
-		where T : new()
-	{
-        public SqlEntityAdapter(string strCnn) 
-			: base(strCnn)
+        : SqlDataAdapter
+            , IEntityAdapter
+        where T : new()
+    {
+        public SqlEntityAdapter(
+            SqlObjectFactory sqlObjectFactory
+        ) : base(sqlObjectFactory)
         {
         }
 
         protected string ToQueryEqual(
-			Parameter p
-		) =>
-			$"{p.Name} = @{p.Name}";
+            Parameter p
+        ) =>
+            $"{p.Name} = @{p.Name}";
 
-        protected string GetWhere(
-			ListParameter keys
-		) => 
-			keys == null
+        public string GetWhere(
+            ListParameter keys
+        ) =>
+            keys == null
             ? ""
-			: $" WHERE " +
+            : $" WHERE " +
                    $@"{
                        keys
                        .Select(ToQueryEqual)
@@ -31,12 +32,12 @@ namespace MiniOrm.Sql
                    } ";
 
         public string CreateQuerySelect(
-			string tableName
-			, ListParameter parameters = null
-		) =>
-			$"SELECT * FROM { tableName }" +
-			$" {GetWhere(parameters)}"			 
-			;
+            string tableName
+            , ListParameter parameters = null
+        ) =>
+            $"SELECT * FROM { tableName }" +
+            $" {GetWhere(parameters)}"
+            ;
 
-	}
+    }
 }

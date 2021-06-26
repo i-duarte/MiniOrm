@@ -3,26 +3,35 @@
 namespace MiniOrm.Common
 {
     public class ListParameter : List<Parameter>
-	{
-		public ListParameter() { }
-		public ListParameter(Parameter parameter)
+    {
+        public ListParameter() { }
+
+        public ListParameter(string name, object value)
         {
-			Add(parameter);
-        }
-		public ListParameter(IEnumerable<Parameter> list)
-        {
-			AddRange(list);
+            Add(name, value);
         }
 
-		public void Add(
-			string name
-			, object value
-		) => 
-			Add(
-				new Parameter { 
-					Name = name
-					, Value = value 
-				}
-			);
-	}
+        public ListParameter(Parameter parameter)
+        {
+            Add(parameter);
+        }
+
+        public ListParameter(IEnumerable<Parameter> list)
+        {
+            AddRange(list);
+        }
+
+        public void Add(
+            string name
+            , object value
+        ) =>
+            Add(
+                new Parameter
+                {
+                    Name = name
+                    ,
+                    Value = value
+                }
+            );
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using MiniOrm.Common;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 
 namespace MiniOrm.EntityFramework
 {
@@ -10,30 +9,26 @@ namespace MiniOrm.EntityFramework
         where T : new()
     {
         private ITableAdapter TableAdapter { get; set; }
-
-        public DataTable(ITableAdapter tableAdapter) 			
-            : base(tableAdapter)
+        
+        public DataTable(IObjectFactory objectFactory)
+            : base(objectFactory)
         {
+            TableAdapter = objectFactory.CreateTableAdapter<T>();
         }
 
         protected IEnumerable<T> GetEnumerable(
             string sql
             , ListParameter parameters = null
         ) =>
-            GetEnumerable(sql, parameters);
+            GetEnumerable<T>(sql, parameters, null);
 
-        protected T GetEntity(
-            string sql
-            , ListParameter parameters = null
-        ) =>
-            GetEntity(sql, parameters);
-
-        public int Insert(
+        private T Insert(
             T entity
-            , DbConnection cnn = null
+            , DbConnection cnn 
+            , DbTransaction tran 
         )
         {
-            var parameters = 
+            var parameters =
                 EntityHelper
                 .GetNonIdentityParameters(entity);
 
@@ -44,13 +39,43 @@ namespace MiniOrm.EntityFramework
                     , parameters
                 );
 
-            return
-                TableAdapter.Execute(
-                    sql
-                    , parameters
-                    , cnn
-                );
+            var i =
+                tran == null
+                ? TableAdapter.Execute(
+                        sql
+                        , parameters
+                        , cnn
+                    )
+                : TableAdapter.Execute(
+                        sql
+                        , parameters
+                        , tran
+                    )
+                ;
+
+            if (i == 0)
+            {
+                return default;
+            }
+
+            parameters =
+                EntityHelper
+                .GetNonIdentityParameters(entity);
+
+            return GetEntity(parameters, tran);
         }
+
+        public T Insert(
+            T entity
+            , DbTransaction tran
+        ) =>
+            Insert(entity, null, tran);
+
+        public T Insert(
+            T entity
+            , DbConnection cnn = null
+        ) =>
+            Insert(entity, cnn, null);
 
         public int Update(
             T entity
@@ -60,7 +85,7 @@ namespace MiniOrm.EntityFramework
             var parameters =
                 EntityHelper.GetParameters(entity)
                 ;
-            
+
             var keyParameters =
                 EntityHelper.GetKeyParameters(entity)
                 ;

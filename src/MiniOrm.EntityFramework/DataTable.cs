@@ -22,12 +22,6 @@ namespace MiniOrm.EntityFramework
         ) =>
             GetEnumerable(sql, parameters);
 
-        protected T GetEntity(
-            string sql
-            , ListParameter parameters = null
-        ) =>
-            GetEntity(sql, parameters);
-
         public int Insert(
             T entity
             , DbConnection cnn = null

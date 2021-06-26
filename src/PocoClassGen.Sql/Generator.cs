@@ -134,7 +134,7 @@ namespace PocoClassGen.Sql
 
             return
                 $@"using System;
-
+using MiniOrm.EntityFramework.Attributes;
 
 namespace {nameSpaceFull}
 {{

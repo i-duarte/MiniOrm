@@ -18,57 +18,101 @@ namespace MiniOrm.EntityFramework
         }
 
         public T GetEntity(
-            ListParameter parameters
-            , DbConnection cnn = null
         ) =>
-            GetEntity(
-                EntityAdapter
-                .CreateQuerySelect(
-                    EntityHelper
-                    .GetTableName(typeof(T))
-                    , parameters
-                )
-                , parameters
-                , cnn
-            );
+            GetEntity(null, null, null);
 
         public T GetEntity(
             string sql
-            , ListParameter parameters = null
-            , DbConnection cnn = null
+        ) =>
+            GetEntity(sql, null, null);
+
+        public T GetEntity(
+            string sql
+            , ListParameter parameters
+        ) =>
+            GetEntity(sql, parameters, null);
+
+        public T GetEntity(
+            ListParameter parameters
+            , DbConnection cnn
+        ) =>
+            GetEntity(null, parameters, cnn);
+
+        public T GetEntity(
+            ListParameter parameters
+        ) =>
+            GetEntity(null, parameters, null);
+
+        public T GetEntity(
+            DbConnection cnn
+        ) =>
+            GetEntity(null, null, cnn);
+
+        public T GetEntity(
+            string sql
+            , ListParameter parameters 
+            , DbConnection cnn 
         ) =>
             GetEntity<T>(
-                sql
+                string.IsNullOrEmpty(sql)
+                ? GetSelect(parameters)
+                : sql
                 , parameters
                 , cnn
             );
 
         public IEnumerable<T> Select(
-            ListParameter parameters = null
-            , DbConnection cnn = null
+       ) =>
+           Select(null, null, null);
+
+        public IEnumerable<T> Select(
+            string sql
+        ) =>
+            Select(sql, null, null);
+
+        public IEnumerable<T> Select(
+            string sql
+            , ListParameter parameters
+        ) =>
+            Select(sql, parameters, null);
+
+        public IEnumerable<T> Select(
+            ListParameter parameters
+            , DbConnection cnn
+        ) =>
+            Select(null, parameters, cnn);
+
+        public IEnumerable<T> Select(
+            ListParameter parameters
+        ) =>
+            Select(null, parameters, null);
+
+        public IEnumerable<T> Select(
+            DbConnection cnn
+        ) =>
+            Select(null, null, cnn);
+
+        public IEnumerable<T> Select(
+            string sql
+            , ListParameter parameters
+            , DbConnection cnn
         ) =>
             GetEnumerable<T>(
-                EntityAdapter
-                    .CreateQuerySelect(
-                        EntityHelper
-                            .GetTableName(typeof(T))
-                        , parameters
-                    )
+                string.IsNullOrEmpty(sql)
+                ? GetSelect(parameters)
+                : sql
                 , parameters
                 , cnn
             );
 
-        public IEnumerable<T> Select(
-            DbConnection cnn = null
-        ) =>
-            GetEnumerable<T>(
-                EntityAdapter
-                .CreateQuerySelect(
-                        EntityHelper
-                            .GetTableName(typeof(T))
-                    )
-                , null
-                , cnn
+        private string GetSelect(
+            ListParameter parameters
+        ) => 
+            EntityAdapter
+            .CreateQuerySelect(
+                EntityHelper
+                    .GetTableName(typeof(T))
+                , parameters
             );
     }
 }
