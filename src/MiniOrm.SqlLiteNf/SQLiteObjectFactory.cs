@@ -3,14 +3,14 @@ using System;
 using System.Data.Common;
 using System.Data.SQLite;
 
-namespace MiniOrm.Sql
+namespace MiniOrm.SQLite
 {
-    public class SqlObjectFactory :
+    public class SQLiteObjectFactory :
         IObjectFactory
     {
         private string StrCnn { get; set; }
 
-        public SqlObjectFactory(string strCnn)
+        public SQLiteObjectFactory(string strCnn)
         {
             StrCnn = strCnn;
         }
@@ -32,52 +32,42 @@ namespace MiniOrm.Sql
             var arr = pipeCnn.Split('|');
             switch (arr.Length)
             {
+                case 1:
+                    return GetStrConexion(arr[0], "");
                 case 2:
-                    return GetStrConexion(arr[0], arr[1], "", "");
-                case 4:
-                    return GetStrConexion(arr[0], arr[1], arr[2], arr[3]);
+                    return GetStrConexion(arr[0], arr[1]);
                 default:
                     throw new Exception("Formato incorrecto de pipeCnn");
             }
         }
 
         private string GetStrConexion(
-            string dataSource
-            , string dbName
-            , string user
-            , string password
-            , int timeOut = 30
-        ) =>
-            $"Server={dataSource};"
-                + $"Database={dbName};"
-                + GetLoginCnnStr(user, password)
-                + "Pooling=false;"
-                + $"connection timeout={timeOut};"
-                ;
-
-        private string GetLoginCnnStr(
-            string user
+            string path
             , string password
         ) =>
-            string.IsNullOrEmpty(user)
-                && string.IsNullOrEmpty(password)
-            ? "Trusted_Connection=True;"
-            : $"User ID={user};"
-                + $"Password={password};";
+            $"Data Source={path}" +
+            $";Version=3" +
+            (
+                string.IsNullOrEmpty(password) 
+                ? "" 
+                : $";Password={password}"
+            ) +
+            $";Pooling=False;"
+            ;
 
         public IDataAdapter CreateDataAdapter()
         {
-            return new SqlDataAdapter(this);
+            return new SQLiteDataAdapter(this);
         }
 
         public IEntityAdapter CreateEntityAdapter<T>() where T : new()
         {
-            return new SqlEntityAdapter<T>(this);
+            return new SQLiteEntityAdapter<T>(this);
         }
 
         public ITableAdapter CreateTableAdapter<T>() where T : new()
         {
-            return new SqlTableAdapter<T>(this);
+            return new SQliteTableAdapter<T>(this);
         }
     }
 

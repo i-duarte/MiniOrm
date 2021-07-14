@@ -8,7 +8,7 @@
     <ProjectGuid>{D9D14546-3311-4DBA-99E6-E036E3E07EB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MiniOrm.SqlLiteNf</RootNamespace>
+    <RootNamespace>MiniOrm.SqlLite</RootNamespace>
     <AssemblyName>MiniOrm.SqlLiteNf</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -63,10 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlDataAdapter.cs" />
-    <Compile Include="SqlEntityAdapter.cs" />
-    <Compile Include="SqlObjectFactory.cs" />
-    <Compile Include="SqlTableAdapter.cs" />
+    <Compile Include="SQLiteDataAdapter.cs" />
+    <Compile Include="SQLiteEntityAdapter.cs" />
+    <Compile Include="SQLiteObjectFactory.cs" />
+    <Compile Include="SQLiteTableAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniOrm.Nf\MiniOrm.Nf.csproj">

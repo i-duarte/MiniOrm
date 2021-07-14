@@ -6,15 +6,15 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 
-namespace MiniOrm.Sql
+namespace MiniOrm.SQLite
 {
-    public class SqlDataAdapter
+    public class SQLiteDataAdapter
         : Common.IDataAdapter
     {
-        private SqlObjectFactory SqlObjectFactory { get; set; }
+        private SQLiteObjectFactory SqlObjectFactory { get; set; }
 
-        public SqlDataAdapter(
-            SqlObjectFactory sqlObjectFactory
+        public SQLiteDataAdapter(
+            SQLiteObjectFactory sqlObjectFactory
         )
         {
             SqlObjectFactory = sqlObjectFactory;

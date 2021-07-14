@@ -1,15 +1,15 @@
 ﻿using MiniOrm.Common;
 using System.Linq;
 
-namespace MiniOrm.Sql
+namespace MiniOrm.SQLite
 {
-    public class SqlEntityAdapter<T>
-        : SqlDataAdapter
+    public class SQLiteEntityAdapter<T>
+        : SQLiteDataAdapter
             , IEntityAdapter
         where T : new()
     {
-        public SqlEntityAdapter(
-            SqlObjectFactory sqlObjectFactory
+        public SQLiteEntityAdapter(
+            SQLiteObjectFactory sqlObjectFactory
         ) : base(sqlObjectFactory)
         {
         }
