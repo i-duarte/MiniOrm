@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 
@@ -20,9 +20,9 @@ namespace MiniOrm.Sql
             SqlObjectFactory = sqlObjectFactory;
         }
 
-        private SqlConnection GetConnection(
+        private SQLiteConnection GetConnection(
         ) =>
-            (SqlConnection)SqlObjectFactory.CreateConnection();
+            (SQLiteConnection)SqlObjectFactory.CreateConnection();
 
         public int Execute(
             string sql
@@ -82,13 +82,13 @@ namespace MiniOrm.Sql
                 :CommandBehavior.Default
             );
 
-        private SqlCommand GetCommand(
+        private SQLiteCommand GetCommand(
             string sql
             , ListParameter parameters
         )
         {
             var cmd =
-               new SqlCommand(sql);
+               new SQLiteCommand(sql);
 
             if ((parameters?.Count ?? 0) != 0)
             {
@@ -105,18 +105,18 @@ namespace MiniOrm.Sql
             return cmd;
         }
 
-        private SqlCommand GetCommand(
+        private SQLiteCommand GetCommand(
             string sql
             , ListParameter parameters
             , DbTransaction tran
         )
         {
             var cmd = GetCommand(sql, parameters, tran.Connection);
-            cmd.Transaction = (SqlTransaction) tran;
+            cmd.Transaction = (SQLiteTransaction) tran;
             return cmd;
         }
 
-        private SqlCommand GetCommand(
+        private SQLiteCommand GetCommand(
             string sql
             , ListParameter parameters
             , DbConnection cnn 
@@ -124,7 +124,7 @@ namespace MiniOrm.Sql
         {
             var cmd = GetCommand(sql, parameters);
             cmd.Connection = 
-                cnn as SqlConnection
+                cnn as SQLiteConnection
                 ?? GetConnection();
             return cmd;
         }
@@ -168,63 +168,63 @@ namespace MiniOrm.Sql
             }
         }
 
-        private SqlParameter GetParametro(Parameter p)
+        private SQLiteParameter GetParametro(Parameter p)
         {
             switch (p.Value.GetType().ToString())
             {
                 case "System.Byte":
-                    return new SqlParameter(p.Name, SqlDbType.TinyInt)
+                    return new SQLiteParameter(p.Name, SqlDbType.TinyInt)
                     {
                         Value = (byte)p.Value
                     };
                 case "System.Int16":
-                    return new SqlParameter(p.Name, SqlDbType.SmallInt)
+                    return new SQLiteParameter(p.Name, SqlDbType.SmallInt)
                     {
                         Value = (short)p.Value
                     };
                 case "System.Int32":
-                    return new SqlParameter(p.Name, SqlDbType.Int)
+                    return new SQLiteParameter(p.Name, SqlDbType.Int)
                     {
                         Value = (int)p.Value
                     };
                 case "System.Int64":
-                    return new SqlParameter(p.Name, SqlDbType.BigInt)
+                    return new SQLiteParameter(p.Name, SqlDbType.BigInt)
                     {
                         Value = (long)p.Value
                     };
                 case "System.DateTime":
-                    return new SqlParameter(p.Name, SqlDbType.DateTime)
+                    return new SQLiteParameter(p.Name, SqlDbType.DateTime)
                     {
                         Value = (DateTime)p.Value
                     };
                 case "System.Char":
-                    return new SqlParameter(p.Name, SqlDbType.VarChar)
+                    return new SQLiteParameter(p.Name, SqlDbType.VarChar)
                     {
                         Value = (string)p.Value
                     };
                 case "System.String":
-                    return new SqlParameter(p.Name, SqlDbType.VarChar)
+                    return new SQLiteParameter(p.Name, SqlDbType.VarChar)
                     {
                         Value = (string)p.Value,
                         Size = ((string)p.Value).Length
                     };
                 case "System.Decimal":
-                    return new SqlParameter(p.Name, SqlDbType.Decimal)
+                    return new SQLiteParameter(p.Name, SqlDbType.Decimal)
                     {
                         Value = (decimal)p.Value
                     };
                 case "System.Single":
-                    return new SqlParameter(p.Name, SqlDbType.Real)
+                    return new SQLiteParameter(p.Name, SqlDbType.Real)
                     {
                         Value = (float)p.Value
                     };
                 case "System.Double":
-                    return new SqlParameter(p.Name, SqlDbType.Float)
+                    return new SQLiteParameter(p.Name, SqlDbType.Float)
                     {
                         Value = (string)p.Value
                     };
                 case "System.Boolean":
-                    return new SqlParameter(p.Name, SqlDbType.Bit)
+                    return new SQLiteParameter(p.Name, SqlDbType.Bit)
                     {
                         Value = (bool)p.Value
                     };

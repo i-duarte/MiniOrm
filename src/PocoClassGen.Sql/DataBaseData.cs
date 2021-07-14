@@ -94,6 +94,7 @@ namespace PocoClassGen.Sql
 							AND CCU.COLUMN_NAME = C.COLUMN_NAME 
                 WHERE 
                     NOT C.TABLE_SCHEMA IS NULL
+                    AND C.TABLE_NAME <> 'sysdiagrams'
                 ORDER BY 
                     C.TABLE_SCHEMA
                     , C.TABLE_NAME

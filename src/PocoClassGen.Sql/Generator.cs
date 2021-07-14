@@ -30,11 +30,11 @@ namespace PocoClassGen.Sql
                 throw new DirectoryNotFoundException();
             }
 
-            var columns =
-                Data
-                .QueryColumns()
-                .ToList()
-                ;
+            //var columns =
+            //    Data
+            //    .QueryColumns()
+            //    .ToList()
+            //    ;
 
             var schemas =
                 Data
@@ -44,9 +44,19 @@ namespace PocoClassGen.Sql
                 .ToList()
                 ;
 
+            //schemas
+            //.ForEach(
+            //    sch => 
+            //    GenerarInterfaces(
+            //        sch
+            //        , nameSpace
+            //        , dirPath
+            //    )
+            //);
+
             schemas
             .ForEach(
-                sch => 
+                sch =>
                 GenerarEntidades(
                     sch
                     , nameSpace
@@ -65,13 +75,43 @@ namespace PocoClassGen.Sql
             //);
         }
 
+        private void GenerarInterfaces(Schema sch, string nameSpace, string dir)
+        {
+            var dirInterfaces =
+                Path.Combine(
+                    dir
+                    , "Interfaces"
+                    , sch.Name == "dbo"
+                        ? ""
+                        : sch.Name
+                )
+                ;
+
+            if (!Directory.Exists(dirInterfaces))
+            {
+                Directory.CreateDirectory(dirInterfaces);
+            }
+
+            sch.Tables
+               .ForEach(
+                    tbl =>
+                    GenerarInterface(
+                        tbl
+                        , nameSpace
+                        , dirInterfaces
+                    )
+               );
+        }
+
+        
+
         //private static void GenerarBdClass(
         //    Schema sch
         //    , string nameSpace
         //    , string dirPath
         //)
         //{
-            
+
         //}
 
         private static void GenerarEntidades(
@@ -81,7 +121,7 @@ namespace PocoClassGen.Sql
         )
         {
 
-            var fulldir = 
+            var dirEntities = 
                 Path.Combine(                    
                     dir
                     , "Entities"
@@ -91,9 +131,9 @@ namespace PocoClassGen.Sql
                 )
                 ;
 
-            if (!Directory.Exists(fulldir))
+            if (!Directory.Exists(dirEntities))
             {
-                Directory.CreateDirectory(fulldir);
+                Directory.CreateDirectory(dirEntities);
             }           
 
             sch.Tables
@@ -102,10 +142,27 @@ namespace PocoClassGen.Sql
                     GenerarEntidad(
                         tbl
                         , nameSpace
-                        , fulldir
+                        , dirEntities
                     )
                );
         }
+
+        private void GenerarInterface(
+            Table tbl
+            , string nameSpace
+            , string dir
+        )
+        {
+            File.WriteAllText(
+                Path.Combine(
+                    dir
+                    , $"I{tbl.Name}.cs"
+                )
+                , GetStrInterface(tbl, nameSpace)
+            );
+        }
+
+        
 
         private static void GenerarEntidad(
             Table tbl
@@ -122,40 +179,82 @@ namespace PocoClassGen.Sql
             );
         }
 
-        private static string GetStrClass(
+        private string GetStrInterface(
             Table tbl
             , string nameSpace
         )
         {
-            var nameSpaceFull = 
-                $"{nameSpace}.Entities{(tbl.Schema == "dbo" ? "" : $".{tbl.Schema}")}";
+            var nameSpaceFull =
+                $"{nameSpace}.Interfaces{(tbl.Schema == "dbo" ? "" : $".{tbl.Schema}")}";
 
             Console.WriteLine($"Generando {tbl.Name}.cs en {nameSpaceFull}");
 
             return
                 $@"using System;
-using MiniOrm.EntityFramework.Attributes;
 
 namespace {nameSpaceFull}
 {{
-    public class {tbl.Name} 
+    public interface I{tbl.Name} 
     {{
-        {GetStrPropiedades(tbl)}
+        {GetStrPropiedadesInterface(tbl)}
     }}
 }}
     ";
         }
 
-        private static string GetStrPropiedades(
+        
+
+        private static string GetStrClass(
+            Table tbl
+            , string nameSpace
+        )
+        {
+            var nameSpaceEntities = 
+                $"{nameSpace}.Entities{(tbl.Schema == "dbo" ? "" : $".{tbl.Schema}")}";
+            //var nameSpaceInterfaces =
+            //    $"{nameSpace}.Interfaces{(tbl.Schema == "dbo" ? "" : $".{tbl.Schema}")}";
+
+            Console.WriteLine($"Generando {tbl.Name}.cs en {nameSpaceEntities}");
+
+            return
+                $@"using System;
+using MiniOrm.EntityFramework.Attributes;
+
+
+namespace {nameSpaceEntities}
+{{
+    public class {tbl.Name} 
+    {{
+        {GetStrPropiedadesClass(tbl)}
+    }}
+}}
+    ";
+        }
+
+        private object GetStrPropiedadesInterface(
             Table tbl
         ) =>
             tbl
             .Columns
-            .Select(GetPropiedad)
+            .Select(GetPropiedadInterface)
+            .JoinWith(SaltoMasIdentacionPropiedades)
+            ;
+
+        private static string GetPropiedadInterface(
+            Column col
+        ) =>
+            @$"{GetTipo(col)} {col.Name} {{ get; set; }}";
+
+        private static string GetStrPropiedadesClass(
+            Table tbl
+        ) =>
+            tbl
+            .Columns
+            .Select(GetPropiedadClass)
             .JoinWith(SaltoMasIdentacionPropiedades)            
             ;
 
-        private static string GetPropiedad(
+        private static string GetPropiedadClass(
             Column col
         ) => 
             @$"{GetAttributes(col)}public {GetTipo(col)} {col.Name} {{ get; set; }}";
@@ -197,7 +296,8 @@ namespace {nameSpaceFull}
                     or "datetime" 
                     or "datetime2" 
                     or "smalldatetime" => "DateTime",
-                "decimal" => "decimal",
+                "decimal" 
+                    or "numeric" => "decimal",
                 "float" => "flota",
                 "int" => "int",
                 "smallint" => "short",

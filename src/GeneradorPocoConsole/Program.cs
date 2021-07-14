@@ -1,6 +1,7 @@
 ﻿using MiniOrm.Sql;
 using PocoClassGen.Sql;
 using System;
+using System.IO;
 
 namespace GenerardorPocoConsole
 {
@@ -8,27 +9,15 @@ namespace GenerardorPocoConsole
     {
         static void Main(string[] args)
         {
-            Console.Write("Server:");
-            var server = Console.ReadLine();
-            Console.Write("Instance\\Database:");
-            var dataBase = Console.ReadLine();
-            Console.Write("User:");
-            var user = Console.ReadLine();
-            Console.Write("Password:");
-            var pass = Console.ReadLine();
+            var lineas = File.ReadAllLines("e:\\tmp\\poco\\conexion.txt");
 
-            Console.Write("Directory:");
-            var dir = Console.ReadLine();
-            Console.Write("Namespace:");
-            var nameSpace = Console.ReadLine();
+            var cnn = lineas[0];
+            var dir = lineas[1];
+            var nameSpace = lineas[2];
 
             var gen = 
                 new Generator(
-                    new SqlObjectFactory(
-                        $"{server}" +
-                        $"|{dataBase}" +
-                        $"{GetUserAndPassword(user,pass)}"
-                    )
+                    new SqlObjectFactory(cnn)
                 );
 
             gen.GenerateClasses(
