@@ -38,7 +38,7 @@ namespace MiniOrm.EntityFramework
         private static bool IsPrimaryKey(
             PropertyInfo p
         ) =>
-            GetFieldAttribute(p.GetType())
+            GetFieldAttribute(p)
                 ?.IsPrimaryKey
             ?? false;
 
