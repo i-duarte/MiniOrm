@@ -24,6 +24,12 @@ namespace MiniOrm.EntityFramework
             GetEntity("", parameters, cnn);
 
         public T GetEntity(
+            DbConnection cnn
+            , params (string nombre, object valor)[] parametros
+        ) =>
+            GetEntity(new ListParameter(parametros), cnn);
+
+        public T GetEntity(
             params (string nombre, object valor)[] parametros
         ) =>
             GetEntity(new ListParameter(parametros));
