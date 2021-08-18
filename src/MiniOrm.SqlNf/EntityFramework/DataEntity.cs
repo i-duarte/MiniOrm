@@ -1,6 +1,7 @@
 ﻿using MiniOrm.Common;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace MiniOrm.EntityFramework
 {
@@ -22,6 +23,12 @@ namespace MiniOrm.EntityFramework
             , DbConnection cnn
         ) =>
             GetEntity("", parameters, cnn);
+
+        public T GetEntity(
+            DbConnection cnn
+            , params (string nombre, object valor)[] parametros
+        ) =>
+            GetEntity(new ListParameter(parametros), cnn);
 
         public T GetEntity(
             params (string nombre, object valor)[] parametros
@@ -82,8 +89,13 @@ namespace MiniOrm.EntityFramework
                 , cnn
             );
 
+        public bool Exists(
+            params (string, object)[] parameters
+        ) => 
+            Select(parameters).Count() > 0;
+
         public IEnumerable<T> Select(
-       ) =>
+        ) =>
            Select(null, null, null);
 
         public IEnumerable<T> Select(
