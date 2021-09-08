@@ -10,19 +10,45 @@ namespace MiniOrm.Sql
     {
         private string StrCnn { get; set; }
 
-        public SqlObjectFactory(string strCnn)
+        public SqlObjectFactory(
+            string dataSource
+            , string dataBase
+            , string user
+            , string password
+        )
         {
-            StrCnn = strCnn;
+            StrCnn = 
+                GetStrConexion(
+                    dataSource
+                    , dataBase
+                    , user
+                    , password
+                );
+        }
+
+        public SqlObjectFactory(
+            string dataSource
+            , string dataBase            
+        ) : this(dataSource, dataBase, "", "")
+        {            
+        }
+
+        public SqlObjectFactory(string strCnn)
+        {   
+            if(strCnn.Contains("|"))
+            {
+                StrCnn = GetStrCnnFromPipeStr(strCnn);
+            }
+            else
+            { 
+                StrCnn = strCnn; 
+            }
         }
 
         public DbConnection CreateConnection()
         {
             var cnn =
-                new SqlConnection(
-                    StrCnn.Contains("|")
-                    ? GetStrCnnFromPipeStr(StrCnn)
-                    : StrCnn
-                );
+                new SqlConnection(StrCnn);
             cnn.Open();
             return cnn;
         }

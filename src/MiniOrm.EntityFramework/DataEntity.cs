@@ -1,7 +1,7 @@
 ﻿using MiniOrm.Common;
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace MiniOrm.EntityFramework
 {
@@ -12,10 +12,10 @@ namespace MiniOrm.EntityFramework
         protected IEntityAdapter EntityAdapter { get; set; }
 
         public DataEntity(
-            IObjectFactory objectFactory
-        ) : base(objectFactory)
+            DataBase db
+        ) : base(db)
         {
-            EntityAdapter = objectFactory.CreateEntityAdapter<T>();
+            EntityAdapter = ObjectFactory.CreateEntityAdapter<T>();
         }
 
         public T GetEntity(
@@ -23,6 +23,17 @@ namespace MiniOrm.EntityFramework
             , DbConnection cnn
         ) =>
             GetEntity("", parameters, cnn);
+
+        public T GetEntity(
+            DbConnection cnn
+            , params (string nombre, object valor)[] parametros
+        ) =>
+            GetEntity(new ListParameter(parametros), cnn);
+
+        public T GetEntity(
+            params (string nombre, object valor)[] parametros
+        ) =>
+            GetEntity(new ListParameter(parametros));
 
         public T GetEntity(
             string nombre
@@ -78,8 +89,13 @@ namespace MiniOrm.EntityFramework
                 , cnn
             );
 
+        public bool Exists(
+            params (string, object)[] parameters
+        ) => 
+            Select(parameters).Count() > 0;
+
         public IEnumerable<T> Select(
-       ) =>
+        ) =>
            Select(null, null, null);
 
         public IEnumerable<T> Select(
@@ -93,16 +109,25 @@ namespace MiniOrm.EntityFramework
         ) =>
             Select(sql, parameters, null);
 
-        public int[] Where(Func<object, object> p)
-        {
-            throw new NotImplementedException();
-        }
+        //public int[] Where(Func<object, object> p)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public IEnumerable<T> Select(
             ListParameter parameters
             , DbConnection cnn
         ) =>
             Select(null, parameters, cnn);
+
+        public IEnumerable<T> Select(
+            params (string nombre, object valor)[] parametros
+        ) =>
+            Select(
+                 null
+                 , new ListParameter(parametros)
+                 , null
+             );
 
         public IEnumerable<T> Select(
             string nombre, object valor

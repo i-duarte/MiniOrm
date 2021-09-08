@@ -38,7 +38,7 @@ namespace MiniOrm.EntityFramework
         private static bool IsPrimaryKey(
             PropertyInfo p
         ) =>
-            GetFieldAttribute(p.GetType())
+            GetFieldAttribute(p)
                 ?.IsPrimaryKey
             ?? false;
 
@@ -235,6 +235,11 @@ namespace MiniOrm.EntityFramework
             {
                 return defaultValue;
             }
+        }
+
+        public static T Transform<T, TR>(TR obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

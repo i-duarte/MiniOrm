@@ -21,6 +21,23 @@ namespace MiniOrm.Common
             AddRange(list);
         }
 
+        public ListParameter(params (string Nombre, object Valor)[] parametros)
+        {
+            foreach (var p in parametros)
+            {
+                Add(p);
+            }
+        }
+
+        public ListParameter(params Parameter[] parametros)
+        {
+            foreach (var p in parametros)
+            {
+                Add(p);
+            }
+        }
+
+
         public void Add(
             string name
             , object value
@@ -33,5 +50,10 @@ namespace MiniOrm.Common
                     Value = value
                 }
             );
+
+        internal void Add((string Nombre, object Valor) parametro)
+        {
+            Add(parametro.Nombre, parametro.Valor);
+        }
     }
 }

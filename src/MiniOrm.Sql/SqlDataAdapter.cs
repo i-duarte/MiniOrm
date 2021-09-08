@@ -22,23 +22,57 @@ namespace MiniOrm.Sql
 
         private SqlConnection GetConnection(
         ) =>
-            (SqlConnection)SqlObjectFactory.CreateConnection();
+            (SqlConnection)
+            SqlObjectFactory.CreateConnection();
+
+        #region Execute
 
         public int Execute(
             string sql
-            , ListParameter parameters = null
-            , DbTransaction tran = null
+            , ListParameter parameters 
+            , DbTransaction tran 
         ) =>
             GetCommand(sql, parameters, tran)
             .ExecuteNonQuery();
 
         public int Execute(
-            string sql
-            , ListParameter parameters = null
-            , DbConnection cnn = null
+           string sql
+           , ListParameter parameters 
+           , DbConnection cnn 
         ) =>
-            GetCommand(sql, parameters, cnn)
-            .ExecuteNonQuery();
+           GetCommand(sql, parameters, cnn)
+           .ExecuteNonQuery();
+
+        public int Execute(
+           string sql
+           , DbTransaction tran
+       ) =>
+           GetCommand(sql, null, tran)
+           .ExecuteNonQuery();
+
+        public int Execute(
+           string sql
+           , DbConnection cnn
+       ) =>
+           GetCommand(sql, null, cnn)
+           .ExecuteNonQuery();
+
+        public int Execute(
+           string sql
+           , ListParameter parameters
+        ) =>
+           GetCommand(sql, parameters)
+           .ExecuteNonQuery();
+
+        public int Execute(
+            string sql
+            , params (string nombre, object valor)[] parameters
+        ) =>
+            Execute(sql, new ListParameter(parameters));
+
+        #endregion
+
+        #region GetDataReader
 
         public DbDataReader GetDataReader(
             string sql
@@ -68,35 +102,47 @@ namespace MiniOrm.Sql
             string sql
             , DbTransaction tran
         ) =>
-            GetCommand(sql, null, tran)
+            GetDataReader(sql, null, tran);
+
+        public DbDataReader GetDataReader(
+            string sql
+            , DbConnection cnn
+        ) =>
+            GetDataReader(sql, null, cnn);
+
+        public DbDataReader GetDataReader(
+            string sql
+            , ListParameter parameters
+        ) =>
+            GetCommand(sql, parameters)
             .ExecuteReader(
-                tran == null
-                ?CommandBehavior.CloseConnection
-                :CommandBehavior.Default
+                CommandBehavior.CloseConnection
             );
+
+        public DbDataReader GetDataReader(
+            string sql
+        ) =>
+            GetCommand(sql)
+            .ExecuteReader(
+                CommandBehavior.CloseConnection
+            );
+
+        #endregion
+
+        #region GetCommand
+
+        private SqlCommand GetCommand(
+            string sql
+        ) => 
+            new SqlCommand(sql, GetConnection());
 
         private SqlCommand GetCommand(
             string sql
             , ListParameter parameters
-        )
-        {
-            var cmd =
-               new SqlCommand(sql);
+        ) => 
+            new SqlCommand(sql)
+            .Pipe(c => AddParams(c, parameters));
 
-            if ((parameters?.Count ?? 0) != 0)
-            {
-                parameters
-                .Select(GetParametro)
-                .ToArray()
-                .Do(
-                    cmd
-                    .Parameters
-                    .AddRange
-                );
-
-            }
-            return cmd;
-        }
 
         private SqlCommand GetCommand(
             string sql
@@ -104,6 +150,11 @@ namespace MiniOrm.Sql
             , DbTransaction tran
         )
         {
+            if(tran == null)
+            {
+                return GetCommand(sql, parameters);
+            }
+
             var cmd = GetCommand(sql, parameters, tran.Connection);
             cmd.Transaction = (SqlTransaction) tran;
             return cmd;
@@ -121,6 +172,8 @@ namespace MiniOrm.Sql
                 ?? GetConnection();
             return cmd;
         }
+
+        #endregion
 
         public object ConvertTo(
             object v
@@ -180,6 +233,11 @@ namespace MiniOrm.Sql
                     {
                         Value = (int)p.Value
                     };
+                case "System.Int64":
+                    return new SqlParameter(p.Name, SqlDbType.BigInt)
+                    {
+                        Value = (long)p.Value
+                    };
                 case "System.DateTime":
                     return new SqlParameter(p.Name, SqlDbType.DateTime)
                     {
@@ -223,7 +281,25 @@ namespace MiniOrm.Sql
             }
         }
 
-        
+        private SqlCommand AddParams(
+            SqlCommand cmd
+            , ListParameter parameters
+        )
+        {
+            if ((parameters?.Count ?? 0) != 0)
+            {
+                parameters
+                .Select(GetParametro)
+                .ToArray()
+                .Do(
+                    cmd
+                    .Parameters
+                    .AddRange
+                );
+
+            }
+            return cmd;
+        }
     }
 
 }

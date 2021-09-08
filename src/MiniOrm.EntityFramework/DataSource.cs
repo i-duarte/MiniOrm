@@ -9,13 +9,16 @@ namespace MiniOrm.EntityFramework
 {
     public class DataSource
     {
-        protected IObjectFactory ObjectFactory { get; set; }
-        public IDataAdapter DataAdapter { get; }
+        protected DataBase DataBase { get; set; }
 
-        public DataSource(IObjectFactory objectFactory)
+        protected IObjectFactory ObjectFactory 
+            => DataBase.ObjectFactory;
+        public IDataAdapter DataAdapter
+            => ObjectFactory.CreateDataAdapter();
+
+        public DataSource(DataBase db)
         {
-            ObjectFactory = objectFactory;
-            DataAdapter = objectFactory.CreateDataAdapter();
+            DataBase = db;
         }
 
         protected T GetEntity<T>(
@@ -48,17 +51,43 @@ namespace MiniOrm.EntityFramework
 
         public T GetEntity<T>(
             string sql
-            , ListParameter parameters = null
-            , DbTransaction tran = null
-        ) where T : new() =>
-            GetEntityWithRead<T>(sql, parameters, tran);
+        ) where T : new() 
+            =>
+            GetEntity<T>(sql, new ListParameter());
 
         public T GetEntity<T>(
             string sql
-            , ListParameter parameters = null
+            , params Parameter[] parameters
+        ) where T : new()
+            =>
+            GetEntity<T>(sql, new ListParameter(parameters));
+
+        public T GetEntity<T>(
+            string sql
+            , params (string, object)[] parameters
+        ) where T : new() 
+            =>
+            GetEntity<T>(sql, new ListParameter(parameters));
+
+        public T GetEntity<T>(
+            string sql
+            , ListParameter parameters
             , DbConnection cnn = null
-        ) where T : new() => 
+        ) where T : new() =>
             GetEntityWithRead<T>(sql, parameters, cnn);
+
+        public T GetEntity<T>(
+            string sql
+            , DbTransaction tran
+        ) where T : new() =>
+            GetEntity<T>(sql, null, tran);
+
+        public T GetEntity<T>(
+            string sql
+            , ListParameter parameters 
+            , DbTransaction tran 
+        ) where T : new() =>
+            GetEntityWithRead<T>(sql, parameters, tran);
 
         private T GetEntityWithRead<T>(
             DbDataReader dr
@@ -81,8 +110,8 @@ namespace MiniOrm.EntityFramework
 
         private T GetEntityWithRead<T>(
             string sql
-            , ListParameter parameters = null
-            , DbConnection cnn = null
+            , ListParameter parameters
+            , DbConnection cnn 
         )
             where T : new()
         {
@@ -101,8 +130,8 @@ namespace MiniOrm.EntityFramework
 
         private T GetEntityWithRead<T>(
             string sql
-            , ListParameter parameters = null
-            , DbTransaction tran = null
+            , ListParameter parameters 
+            , DbTransaction tran 
         )
             where T : new()
         {
@@ -118,6 +147,24 @@ namespace MiniOrm.EntityFramework
                 return GetEntityWithRead<T>(dr);
             }
         }
+
+        private T GetEntityWithRead<T>(
+            string sql
+            , DbTransaction tran
+        ) where T : new()
+            => GetEntityWithRead<T>(sql, null, tran);
+
+        protected IEnumerable<T> GetEnumerable<T>(
+            string sql
+            , params (string nombre, object valor)[] parameters
+        ) where T : new() =>
+            GetEnumerable<T>(sql, new ListParameter(parameters));
+
+        protected IEnumerable<T> GetEnumerable<T>(
+            string sql
+            , ListParameter parameters = null
+        ) where T : new() =>
+            GetEnumerable<T>(sql, parameters, null);
 
         public IEnumerable<T> GetEnumerable<T>(
             string sql
@@ -157,6 +204,12 @@ namespace MiniOrm.EntityFramework
                 dr.Close();
             }
         }
+
+        public T Get<T>(
+            string sql
+            , params (string nombre, object valor)[] parameters
+        ) =>
+            Get<T>(sql, new ListParameter(parameters));
 
         public T Get<T>(
             string sql

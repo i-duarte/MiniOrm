@@ -49,7 +49,7 @@ namespace MiniOrm.Sql
                 $@"{
                     parameters
                     .Select(ToQueryEqual)
-                    .JoinWith(",")
+                    .JoinWith(", ")
                 } " +
             GetWhere(keys)
             ;

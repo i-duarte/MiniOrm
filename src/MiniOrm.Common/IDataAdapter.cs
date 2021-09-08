@@ -29,14 +29,24 @@ namespace MiniOrm.Common
 
         int Execute(
             string sql
+            , params (string nombre, object valor)[] parameters
+        );
+
+        int Execute(
+            string sql
             , ListParameter parameters = null
             , DbConnection cnn = null
         );
 
         int Execute(
             string sql
-            , ListParameter parameters = null
-            , DbTransaction tran= null
+            , ListParameter parameters 
+            , DbTransaction tran
+        );
+
+        int Execute(
+            string sql
+            , DbTransaction tran
         );
 
     }

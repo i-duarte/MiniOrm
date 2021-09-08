@@ -38,6 +38,5 @@ namespace MiniOrm.Sql
             $"SELECT * FROM { tableName }" +
             $" {GetWhere(parameters)}"
             ;
-
     }
 }

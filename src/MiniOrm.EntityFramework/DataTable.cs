@@ -8,19 +8,30 @@ namespace MiniOrm.EntityFramework
         : DataEntity<T>
         where T : new()
     {
-        private ITableAdapter TableAdapter { get; set; }
+        protected ITableAdapter TableAdapter { get; set; }
         
-        public DataTable(IObjectFactory objectFactory)
-            : base(objectFactory)
+        public DataTable(DataBase db)
+            : base(db)
         {
-            TableAdapter = objectFactory.CreateTableAdapter<T>();
+            TableAdapter = ObjectFactory.CreateTableAdapter<T>();
         }
 
-        protected IEnumerable<T> GetEnumerable(
-            string sql
-            , ListParameter parameters = null
-        ) =>
-            GetEnumerable<T>(sql, parameters, null);
+        public int Delete(
+            params (string nombre, object valor)[] parameters
+        ) => 
+            Delete(new ListParameter(parameters));
+
+        public int Delete(
+            ListParameter parameters
+        ) => 
+            TableAdapter
+                .Execute(
+                    TableAdapter.CreateQueryDelete(
+                        EntityHelper.GetTableName(
+                            typeof(T))
+                            , parameters
+                        )
+                    , parameters);
 
         private T Insert(
             T entity
@@ -85,6 +96,8 @@ namespace MiniOrm.EntityFramework
             var parameters =
                 EntityHelper.GetParameters(entity)
                 ;
+            var nonIdentityParams =
+                EntityHelper.GetNonIdentityParameters(entity);
 
             var keyParameters =
                 EntityHelper.GetKeyParameters(entity)
@@ -94,7 +107,7 @@ namespace MiniOrm.EntityFramework
                 TableAdapter
                 .CreateQueryUpdate(
                     EntityHelper.GetTableName(typeof(T))
-                    , parameters
+                    , nonIdentityParams
                     , keyParameters
                 );
 
