@@ -29,7 +29,15 @@ namespace MiniOrm.Common
             }
         }
 
-        
+        public ListParameter(params Parameter[] parametros)
+        {
+            foreach (var p in parametros)
+            {
+                Add(p);
+            }
+        }
+
+
         public void Add(
             string name
             , object value

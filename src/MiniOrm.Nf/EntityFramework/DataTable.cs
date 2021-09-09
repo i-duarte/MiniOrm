@@ -96,6 +96,8 @@ namespace MiniOrm.EntityFramework
             var parameters =
                 EntityHelper.GetParameters(entity)
                 ;
+            var nonIdentityParams =
+                EntityHelper.GetNonIdentityParameters(entity);
 
             var keyParameters =
                 EntityHelper.GetKeyParameters(entity)
@@ -105,7 +107,7 @@ namespace MiniOrm.EntityFramework
                 TableAdapter
                 .CreateQueryUpdate(
                     EntityHelper.GetTableName(typeof(T))
-                    , parameters
+                    , nonIdentityParams
                     , keyParameters
                 );
 
