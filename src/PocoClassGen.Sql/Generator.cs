@@ -10,7 +10,7 @@ namespace PocoClassGen.Sql
     {
         private DataBaseData Data { get; set; }
         public static string IdentacionPropiedades 
-            => "        ";
+            => ' '.Repeat(8);
 
         public static string SaltoMasIdentacionPropiedades
             => $"{Environment.NewLine}{IdentacionPropiedades}";

@@ -24,6 +24,9 @@ namespace GenerardorPocoConsole
                 dir
                 , nameSpace
             );
+
+            Console.WriteLine("proceso terminado");
+            Console.ReadLine();
         }
 
         private static object GetUserAndPassword(

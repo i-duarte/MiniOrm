@@ -6,6 +6,14 @@ namespace PocoClassGen.Sql
     public static class MyExtensions
     {
 
+        public static string Repeat(
+            this char source
+            , int n
+        )
+        {
+            return new string(source, n);
+        }
+
         public static string MenosUltimoEnter(
             this string source
         ) =>

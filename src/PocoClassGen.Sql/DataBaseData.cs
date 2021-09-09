@@ -1,6 +1,5 @@
 ﻿using MiniOrm.Common;
 using MiniOrm.EntityFramework;
-using MiniOrm.Sql;
 using System.Collections.Generic;
 
 namespace PocoClassGen.Sql
