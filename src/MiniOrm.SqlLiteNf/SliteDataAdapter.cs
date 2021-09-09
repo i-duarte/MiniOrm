@@ -6,23 +6,26 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 
-namespace MiniOrm.SQLite
+namespace MiniOrm.Sql
 {
-    public class SQLiteDataAdapter
+    public class SliteDataAdapter
         : Common.IDataAdapter
     {
-        private SQLiteObjectFactory SqlObjectFactory { get; set; }
+        private SliteObjectFactory SliteObjectFactory { get; set; }
 
-        public SQLiteDataAdapter(
-            SQLiteObjectFactory sqlObjectFactory
+        public SliteDataAdapter(
+            SliteObjectFactory sliteObjectFactory
         )
         {
-            SqlObjectFactory = sqlObjectFactory;
+            SliteObjectFactory = sliteObjectFactory;
         }
 
         private SQLiteConnection GetConnection(
         ) =>
-            (SQLiteConnection)SqlObjectFactory.CreateConnection();
+            (SQLiteConnection)
+            SliteObjectFactory.CreateConnection();
+
+        #region Execute
 
         public int Execute(
             string sql
@@ -33,19 +36,43 @@ namespace MiniOrm.SQLite
             .ExecuteNonQuery();
 
         public int Execute(
-            string sql
-            , DbTransaction tran
+           string sql
+           , ListParameter parameters 
+           , DbConnection cnn 
         ) =>
-            GetCommand(sql, null, tran)
-            .ExecuteNonQuery();
+           GetCommand(sql, parameters, cnn)
+           .ExecuteNonQuery();
+
+        public int Execute(
+           string sql
+           , DbTransaction tran
+       ) =>
+           GetCommand(sql, null, tran)
+           .ExecuteNonQuery();
+
+        public int Execute(
+           string sql
+           , DbConnection cnn
+       ) =>
+           GetCommand(sql, null, cnn)
+           .ExecuteNonQuery();
+
+        public int Execute(
+           string sql
+           , ListParameter parameters
+        ) =>
+           GetCommand(sql, parameters)
+           .ExecuteNonQuery();
 
         public int Execute(
             string sql
-            , ListParameter parameters = null
-            , DbConnection cnn = null
+            , params (string nombre, object valor)[] parameters
         ) =>
-            GetCommand(sql, parameters, cnn)
-            .ExecuteNonQuery();
+            Execute(sql, new ListParameter(parameters));
+
+        #endregion
+
+        #region GetDataReader
 
         public DbDataReader GetDataReader(
             string sql
@@ -75,35 +102,47 @@ namespace MiniOrm.SQLite
             string sql
             , DbTransaction tran
         ) =>
-            GetCommand(sql, null, tran)
+            GetDataReader(sql, null, tran);
+
+        public DbDataReader GetDataReader(
+            string sql
+            , DbConnection cnn
+        ) =>
+            GetDataReader(sql, null, cnn);
+
+        public DbDataReader GetDataReader(
+            string sql
+            , ListParameter parameters
+        ) =>
+            GetCommand(sql, parameters)
             .ExecuteReader(
-                tran == null
-                ?CommandBehavior.CloseConnection
-                :CommandBehavior.Default
+                CommandBehavior.CloseConnection
             );
+
+        public DbDataReader GetDataReader(
+            string sql
+        ) =>
+            GetCommand(sql)
+            .ExecuteReader(
+                CommandBehavior.CloseConnection
+            );
+
+        #endregion
+
+        #region GetCommand
+
+        private SQLiteCommand GetCommand(
+            string sql
+        ) => 
+            new SQLiteCommand(sql, GetConnection());
 
         private SQLiteCommand GetCommand(
             string sql
             , ListParameter parameters
-        )
-        {
-            var cmd =
-               new SQLiteCommand(sql);
+        ) => 
+            new SQLiteCommand(sql)
+            .Pipe(c => AddParams(c, parameters));
 
-            if ((parameters?.Count ?? 0) != 0)
-            {
-                parameters
-                .Select(GetParametro)
-                .ToArray()
-                .Do(
-                    cmd
-                    .Parameters
-                    .AddRange
-                );
-
-            }
-            return cmd;
-        }
 
         private SQLiteCommand GetCommand(
             string sql
@@ -111,6 +150,11 @@ namespace MiniOrm.SQLite
             , DbTransaction tran
         )
         {
+            if(tran == null)
+            {
+                return GetCommand(sql, parameters);
+            }
+
             var cmd = GetCommand(sql, parameters, tran.Connection);
             cmd.Transaction = (SQLiteTransaction) tran;
             return cmd;
@@ -128,6 +172,8 @@ namespace MiniOrm.SQLite
                 ?? GetConnection();
             return cmd;
         }
+
+        #endregion
 
         public object ConvertTo(
             object v
@@ -173,58 +219,53 @@ namespace MiniOrm.SQLite
             switch (p.Value.GetType().ToString())
             {
                 case "System.Byte":
-                    return new SQLiteParameter(p.Name, SqlDbType.TinyInt)
+                    return new SQLiteParameter(p.Name, DbType.Byte)
                     {
                         Value = (byte)p.Value
                     };
                 case "System.Int16":
-                    return new SQLiteParameter(p.Name, SqlDbType.SmallInt)
+                    return new SQLiteParameter(p.Name, DbType.Int16)
                     {
                         Value = (short)p.Value
                     };
                 case "System.Int32":
-                    return new SQLiteParameter(p.Name, SqlDbType.Int)
+                    return new SQLiteParameter(p.Name, DbType.Int32)
                     {
                         Value = (int)p.Value
                     };
                 case "System.Int64":
-                    return new SQLiteParameter(p.Name, SqlDbType.BigInt)
+                    return new SQLiteParameter(p.Name, DbType.Int64)
                     {
                         Value = (long)p.Value
                     };
                 case "System.DateTime":
-                    return new SQLiteParameter(p.Name, SqlDbType.DateTime)
+                    return new SQLiteParameter(p.Name, DbType.DateTime)
                     {
                         Value = (DateTime)p.Value
                     };
                 case "System.Char":
-                    return new SQLiteParameter(p.Name, SqlDbType.VarChar)
-                    {
-                        Value = (string)p.Value
-                    };
-                case "System.String":
-                    return new SQLiteParameter(p.Name, SqlDbType.VarChar)
+                    return new SQLiteParameter(p.Name, DbType.String)
                     {
                         Value = (string)p.Value,
                         Size = ((string)p.Value).Length
                     };
                 case "System.Decimal":
-                    return new SQLiteParameter(p.Name, SqlDbType.Decimal)
+                    return new SQLiteParameter(p.Name, DbType.Decimal)
                     {
                         Value = (decimal)p.Value
                     };
                 case "System.Single":
-                    return new SQLiteParameter(p.Name, SqlDbType.Real)
+                    return new SQLiteParameter(p.Name, DbType.Single)
                     {
                         Value = (float)p.Value
                     };
                 case "System.Double":
-                    return new SQLiteParameter(p.Name, SqlDbType.Float)
+                    return new SQLiteParameter(p.Name, DbType.Double)
                     {
                         Value = (string)p.Value
                     };
                 case "System.Boolean":
-                    return new SQLiteParameter(p.Name, SqlDbType.Bit)
+                    return new SQLiteParameter(p.Name, DbType.Boolean)
                     {
                         Value = (bool)p.Value
                     };
@@ -235,11 +276,25 @@ namespace MiniOrm.SQLite
             }
         }
 
-        public int Execute(
-            string sql
-            , params (string nombre, object valor)[] parameters
-        ) => 
-            Execute(sql, new ListParameter(parameters));
+        private SQLiteCommand AddParams(
+            SQLiteCommand cmd
+            , ListParameter parameters
+        )
+        {
+            if ((parameters?.Count ?? 0) != 0)
+            {
+                parameters
+                .Select(GetParametro)
+                .ToArray()
+                .Do(
+                    cmd
+                    .Parameters
+                    .AddRange
+                );
+
+            }
+            return cmd;
+        }
     }
 
 }

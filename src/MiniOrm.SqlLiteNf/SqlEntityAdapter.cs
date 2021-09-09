@@ -1,15 +1,15 @@
 ﻿using MiniOrm.Common;
 using System.Linq;
 
-namespace MiniOrm.SQLite
+namespace MiniOrm.Sql
 {
-    public class SQLiteEntityAdapter<T>
-        : SQLiteDataAdapter
+    public class SqlEntityAdapter<T>
+        : SqlDataAdapter
             , IEntityAdapter
         where T : new()
     {
-        public SQLiteEntityAdapter(
-            SQLiteObjectFactory sqlObjectFactory
+        public SqlEntityAdapter(
+            SqlObjectFactory sqlObjectFactory
         ) : base(sqlObjectFactory)
         {
         }
@@ -38,6 +38,5 @@ namespace MiniOrm.SQLite
             $"SELECT * FROM { tableName }" +
             $" {GetWhere(parameters)}"
             ;
-
     }
 }

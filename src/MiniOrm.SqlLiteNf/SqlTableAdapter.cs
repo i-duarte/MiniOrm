@@ -1,15 +1,15 @@
 ﻿using MiniOrm.Common;
 using System.Linq;
 
-namespace MiniOrm.SQLite
+namespace MiniOrm.Sql
 {
-    public class SQliteTableAdapter<T>
-        : SQLiteEntityAdapter<T>
+    public class SqlTableAdapter<T>
+        : SqlEntityAdapter<T>
             , ITableAdapter
         where T : new()
     {
-        public SQliteTableAdapter(
-            SQLiteObjectFactory sqlObjectFactory
+        public SqlTableAdapter(
+            SqlObjectFactory sqlObjectFactory
         ) : base(sqlObjectFactory)
         {
         }
@@ -49,7 +49,7 @@ namespace MiniOrm.SQLite
                 $@"{
                     parameters
                     .Select(ToQueryEqual)
-                    .JoinWith(",")
+                    .JoinWith(", ")
                 } " +
             GetWhere(keys)
             ;
