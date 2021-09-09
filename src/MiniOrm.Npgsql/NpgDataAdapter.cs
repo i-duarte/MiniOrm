@@ -1,5 +1,6 @@
 ﻿using MiniOrm.Common;
 using Npgsql;
+using NpgsqlTypes;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -218,59 +219,50 @@ namespace MiniOrm.Sql
         {
             switch (p.Value.GetType().ToString())
             {
-                case "System.Byte":
-                    return new NpgsqlParameter(p.Name, SqlDbType.TinyInt)
-                    {
-                        Value = (byte)p.Value
-                    };
                 case "System.Int16":
-                    return new NpgsqlParameter(p.Name, SqlDbType.SmallInt)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Smallint)
                     {
                         Value = (short)p.Value
                     };
                 case "System.Int32":
-                    return new NpgsqlParameter(p.Name, SqlDbType.Int)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Integer)
                     {
                         Value = (int)p.Value
                     };
                 case "System.Int64":
-                    return new NpgsqlParameter(p.Name, SqlDbType.BigInt)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Bigint)
                     {
                         Value = (long)p.Value
                     };
                 case "System.DateTime":
-                    return new NpgsqlParameter(p.Name, SqlDbType.DateTime)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Timestamp)
                     {
                         Value = (DateTime)p.Value
                     };
                 case "System.Char":
-                    return new NpgsqlParameter(p.Name, SqlDbType.VarChar)
-                    {
-                        Value = (string)p.Value
-                    };
                 case "System.String":
-                    return new NpgsqlParameter(p.Name, SqlDbType.VarChar)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Text)
                     {
                         Value = (string)p.Value,
                         Size = ((string)p.Value).Length
                     };
                 case "System.Decimal":
-                    return new NpgsqlParameter(p.Name, SqlDbType.Decimal)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Numeric)
                     {
                         Value = (decimal)p.Value
                     };
                 case "System.Single":
-                    return new NpgsqlParameter(p.Name, SqlDbType.Real)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Real)
                     {
                         Value = (float)p.Value
                     };
                 case "System.Double":
-                    return new NpgsqlParameter(p.Name, SqlDbType.Float)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Double)
                     {
                         Value = (string)p.Value
                     };
                 case "System.Boolean":
-                    return new NpgsqlParameter(p.Name, SqlDbType.Bit)
+                    return new NpgsqlParameter(p.Name, NpgsqlDbType.Boolean)
                     {
                         Value = (bool)p.Value
                     };

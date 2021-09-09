@@ -15,6 +15,7 @@ namespace MiniOrm.Sql
             , string dataBase
             , string user
             , string password
+            , int port = 5432
         )
         {
             StrCnn = 
@@ -23,14 +24,8 @@ namespace MiniOrm.Sql
                     , dataBase
                     , user
                     , password
+                    , port
                 );
-        }
-
-        public NpgObjectFactory(
-            string dataSource
-            , string dataBase            
-        ) : this(dataSource, dataBase, "", "")
-        {            
         }
 
         public NpgObjectFactory(string strCnn)
@@ -58,8 +53,6 @@ namespace MiniOrm.Sql
             var arr = pipeCnn.Split('|');
             switch (arr.Length)
             {
-                case 2:
-                    return GetStrConexion(arr[0], arr[1], "", "");
                 case 4:
                     return GetStrConexion(arr[0], arr[1], arr[2], arr[3]);
                 default:
@@ -72,24 +65,17 @@ namespace MiniOrm.Sql
             , string dbName
             , string user
             , string password
+            , int port = 5432
             , int timeOut = 30
         ) =>
-            $"Server={dataSource};"
-                + $"Database={dbName};"
-                + GetLoginCnnStr(user, password)
-                + "Pooling=false;"
-                + $"connection timeout={timeOut};"
-                ;
-
-        private string GetLoginCnnStr(
-            string user
-            , string password
-        ) =>
-            string.IsNullOrEmpty(user)
-                && string.IsNullOrEmpty(password)
-            ? "Trusted_Connection=True;"
-            : $"User ID={user};"
-                + $"Password={password};";
+            $"Host={dataSource}" +
+            $";Username={user}" +
+            $";Password={password}" +
+            $";Database={dbName}" +
+            $";Pooling=false" +
+            $";Timeout={timeOut}" +
+            $";Port={port}"
+            ;
 
         public IDataAdapter CreateDataAdapter()
         {
