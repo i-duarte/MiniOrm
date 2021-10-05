@@ -4,14 +4,14 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.IO;
 
-namespace MiniOrm.Sql
+namespace MiniOrm.MsAccessNf
 {
-    public class SqlObjectFactory :
+    public class MsaObjectFactory :
         IObjectFactory
     {
         private string StrCnn { get; set; }
 
-        public SqlObjectFactory(
+        public MsaObjectFactory(
             string pathBd
             , string password
         )
@@ -23,7 +23,7 @@ namespace MiniOrm.Sql
                 );
         }
 
-        public SqlObjectFactory(string strCnn)
+        public MsaObjectFactory(string strCnn)
         {   
             if(strCnn.Contains("|"))
             {
@@ -78,17 +78,17 @@ namespace MiniOrm.Sql
 
         public IDataAdapter CreateDataAdapter()
         {
-            return new SqlDataAdapter(this);
+            return new MsaDataAdapter(this);
         }
 
         public IEntityAdapter CreateEntityAdapter<T>() where T : new()
         {
-            return new SqlEntityAdapter<T>(this);
+            return new MsaEntityAdapter<T>(this);
         }
 
         public ITableAdapter CreateTableAdapter<T>() where T : new()
         {
-            return new SqlTableAdapter<T>(this);
+            return new MsaTableAdapter<T>(this);
         }
     }
 

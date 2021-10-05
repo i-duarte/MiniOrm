@@ -43,29 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\IDataAdapter.cs" />
-    <Compile Include="Common\IEntityAdapter.cs" />
-    <Compile Include="Common\IObjectFactory.cs" />
-    <Compile Include="Common\ITableAdapter.cs" />
-    <Compile Include="Common\ListParameter.cs" />
-    <Compile Include="Common\MyExtensions.cs" />
-    <Compile Include="Common\Parameter.cs" />
-    <Compile Include="EntityFramework\Attributes\FieldAttribute.cs" />
-    <Compile Include="EntityFramework\Attributes\OrmAttribute.cs" />
-    <Compile Include="EntityFramework\Attributes\TableAttribute.cs" />
-    <Compile Include="EntityFramework\DataBase.cs" />
-    <Compile Include="EntityFramework\DataEntity.cs" />
-    <Compile Include="EntityFramework\DataSource.cs" />
-    <Compile Include="EntityFramework\DataTable.cs" />
-    <Compile Include="EntityFramework\EntityHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sql\SqlDataAdapter.cs" />
-    <Compile Include="Sql\SqlEntityAdapter.cs" />
-    <Compile Include="Sql\SqlObjectFactory.cs" />
-    <Compile Include="Sql\SqlTableAdapter.cs" />
+    <Compile Include="MsaDataAdapter.cs" />
+    <Compile Include="MsaEntityAdapter.cs" />
+    <Compile Include="MsaObjectFactory.cs" />
+    <Compile Include="MsaTableAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiniOrm.Nf\MiniOrm.Nf.csproj">
+      <Project>{f569a694-5879-45df-a745-4fbe1ccea410}</Project>
+      <Name>MiniOrm.Nf</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

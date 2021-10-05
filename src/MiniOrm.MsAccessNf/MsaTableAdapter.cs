@@ -1,15 +1,15 @@
 ﻿using MiniOrm.Common;
 using System.Linq;
 
-namespace MiniOrm.Sql
+namespace MiniOrm.MsAccessNf
 {
-    public class SqlTableAdapter<T>
-        : SqlEntityAdapter<T>
+    public class MsaTableAdapter<T>
+        : MsaEntityAdapter<T>
             , ITableAdapter
         where T : new()
     {
-        public SqlTableAdapter(
-            SqlObjectFactory sqlObjectFactory
+        public MsaTableAdapter(
+            MsaObjectFactory sqlObjectFactory
         ) : base(sqlObjectFactory)
         {
         }

@@ -6,15 +6,15 @@ using System.Data.Odbc;
 using System.Linq;
 using System.Reflection;
 
-namespace MiniOrm.Sql
+namespace MiniOrm.MsAccessNf
 {
-    public class SqlDataAdapter
+    public class MsaDataAdapter
         : Common.IDataAdapter
     {
-        private SqlObjectFactory SqlObjectFactory { get; set; }
+        private MsaObjectFactory SqlObjectFactory { get; set; }
 
-        public SqlDataAdapter(
-            SqlObjectFactory sqlObjectFactory
+        public MsaDataAdapter(
+            MsaObjectFactory sqlObjectFactory
         )
         {
             SqlObjectFactory = sqlObjectFactory;
