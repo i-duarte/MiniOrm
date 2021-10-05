@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrm.Nf", "MiniOrm.Nf\Mi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrm.SqlLiteNf", "MiniOrm.SqlLiteNf\MiniOrm.SqlLiteNf.csproj", "{D9D14546-3311-4DBA-99E6-E036E3E07EB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrm.MsAccessNf", "MiniOrm.MsAccessNf\MiniOrm.MsAccessNf.csproj", "{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{D9D14546-3311-4DBA-99E6-E036E3E07EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9D14546-3311-4DBA-99E6-E036E3E07EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9D14546-3311-4DBA-99E6-E036E3E07EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
