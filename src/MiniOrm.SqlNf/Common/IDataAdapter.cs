@@ -28,7 +28,7 @@ namespace MiniOrm.Common
         );
 
         int Execute(
-            string sql
+            string sql            
             , params (string nombre, object valor)[] parameters
         );
 

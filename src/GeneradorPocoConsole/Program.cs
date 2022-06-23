@@ -9,7 +9,7 @@ namespace GenerardorPocoConsole
     {
         static void Main(string[] args)
         {
-            var lineas = File.ReadAllLines("e:\\tmp\\poco\\conexion.txt");
+            var lineas = File.ReadAllLines("d:\\tmp\\poco\\conexion.txt");
 
             var cnn = lineas[0];
             var dir = lineas[1];

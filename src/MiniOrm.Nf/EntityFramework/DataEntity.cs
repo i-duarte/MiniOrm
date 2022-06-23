@@ -121,6 +121,16 @@ namespace MiniOrm.EntityFramework
             Select(null, parameters, cnn);
 
         public IEnumerable<T> Select(
+            string sql, 
+            params (string nombre, object valor)[] parametros
+        ) =>
+            Select(
+                 sql
+                 , new ListParameter(parametros)
+                 , null
+             );
+
+        public IEnumerable<T> Select(
             params (string nombre, object valor)[] parametros
         ) =>
             Select(

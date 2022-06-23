@@ -21,9 +21,10 @@ namespace MiniOrm.Sql
         }
 
         private SqlConnection GetConnection(
+            int timeOut = 30
         ) =>
             (SqlConnection)
-            SqlObjectFactory.CreateConnection();
+            SqlObjectFactory.CreateConnection(timeOut);
 
         #region Execute
 
@@ -58,7 +59,7 @@ namespace MiniOrm.Sql
            .ExecuteNonQuery();
 
         public int Execute(
-           string sql
+           string sql           
            , ListParameter parameters
         ) =>
            GetCommand(sql, parameters)
@@ -140,7 +141,15 @@ namespace MiniOrm.Sql
             string sql
             , ListParameter parameters
         ) => 
-            new SqlCommand(sql)
+            new SqlCommand(sql, GetConnection())
+            .Pipe(c => AddParams(c, parameters));
+
+        private SqlCommand GetCommand(
+            string sql
+            , int timeOut
+            , ListParameter parameters
+        ) =>
+            new SqlCommand(sql, GetConnection(timeOut))
             .Pipe(c => AddParams(c, parameters));
 
 
@@ -300,6 +309,8 @@ namespace MiniOrm.Sql
             }
             return cmd;
         }
+
+        
     }
 
 }

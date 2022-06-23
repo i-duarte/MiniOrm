@@ -1,5 +1,4 @@
 ﻿using MiniOrm.Common;
-using System.Collections.Generic;
 using System.Data.Common;
 
 namespace MiniOrm.EntityFramework
