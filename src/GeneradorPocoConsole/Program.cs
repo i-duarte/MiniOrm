@@ -1,4 +1,6 @@
-﻿using MiniOrm.Sql;
+﻿using MiniOrm.Common;
+using MiniOrm.MsAccessNf;
+using MiniOrm.Sql;
 using PocoClassGen.Sql;
 using System;
 using System.IO;
@@ -9,24 +11,45 @@ namespace GenerardorPocoConsole
     {
         static void Main(string[] args)
         {
-            var lineas = File.ReadAllLines("d:\\tmp\\poco\\conexion.txt");
+            var lineas = File.ReadAllLines("f:\\tmp\\poco\\conexion.txt");
 
-            var cnn = lineas[0];
-            var dir = lineas[1];
-            var nameSpace = lineas[2];
+            var tipo = lineas[0];
+            var cnn = lineas[1];
+            var dir = lineas[2];
+            var nameSpace = lineas[3];
 
-            var gen = 
+            MiniOrm.Common.IObjectFactory factory = null;
+
+            if(tipo == "access")
+            {
+                factory = new MsaObjectFactory(cnn);
+            }
+            else
+            {
+                factory = new SqlObjectFactory(cnn);
+            }
+
+            Generar(new SqlObjectFactory(cnn), dir, nameSpace);
+
+            Console.WriteLine("proceso terminado");
+            Console.ReadLine();
+        }
+
+        private static void Generar(
+            MiniOrm.Common.IObjectFactory objectFactory
+            , string dir
+            , string nameSpace
+        )
+        {
+            var gen =
                 new Generator(
-                    new SqlObjectFactory(cnn)
+                    objectFactory
                 );
 
             gen.GenerateClasses(
                 dir
                 , nameSpace
             );
-
-            Console.WriteLine("proceso terminado");
-            Console.ReadLine();
         }
 
         private static object GetUserAndPassword(

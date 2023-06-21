@@ -21,8 +21,8 @@ namespace MiniOrm.EntityFramework
         }
 
         public DataSource(DataBase db)
-            :this(db.ObjectFactory)
-        {            
+             : this(db.ObjectFactory)
+        {
         }
 
         protected T GetEntity<T>(

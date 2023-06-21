@@ -91,6 +91,11 @@ namespace MiniOrm.Sql
         {
             return new NpgTableAdapter<T>(this);
         }
+
+        public DbConnection CreateConnection(int timeOut = 30)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

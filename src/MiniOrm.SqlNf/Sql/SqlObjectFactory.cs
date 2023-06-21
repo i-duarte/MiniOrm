@@ -47,6 +47,8 @@ namespace MiniOrm.Sql
                         User = arr[2];
                         Password = arr[3];
                         break;
+                    case 2:
+                        break;
                     default:
                         throw new Exception("Formato incorrecto de pipeCnn");
                 }

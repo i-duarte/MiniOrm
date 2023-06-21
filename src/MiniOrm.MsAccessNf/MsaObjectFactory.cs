@@ -1,8 +1,10 @@
 ﻿using MiniOrm.Common;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.IO;
+using System.Linq;
 
 namespace MiniOrm.MsAccessNf
 {
@@ -55,13 +57,67 @@ namespace MiniOrm.MsAccessNf
             }
         }
 
+        public static List<string> GetSystemDriverList()
+        {
+            var nombres = new List<string>();
+
+            var reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software");
+
+            if (reg == null)
+            {
+                return nombres;
+            }
+            reg = reg.OpenSubKey("ODBC");
+
+            if (reg == null)
+            {
+                return nombres;
+            }
+            reg = reg.OpenSubKey("ODBCINST.INI");
+
+            if (reg == null)
+            {
+                return nombres;
+            }
+
+            reg = reg.OpenSubKey("ODBC Drivers");
+
+            if (reg == null)
+            {
+                return nombres;
+            }
+
+            foreach (string sName in reg.GetValueNames())
+            {
+                nombres.Add(sName);
+            }
+
+            try
+            {
+                reg?.Close();
+            }
+            catch { /* ignore this exception if we couldn't close */ }
+
+            return nombres;
+        }
+
+        private static string GetAccessDriverName()
+        {
+            var dn = GetSystemDriverList().FirstOrDefault(d => d.StartsWith("Microsoft Access Driver ("));
+            if (string.IsNullOrEmpty(dn))
+            {
+                throw new Exception("No se encontro el driver ODBC para Ms Access");
+            }
+            return dn;
+        }
+
         private string GetStrConexion(
             string pathBd
             , string password            
         ) =>
             "Provider=MSDataShape" +
             ";data provider=MSDASQL" +
-            ";DRIVER=Microsoft Access Driver (*.mdb)" +
+            $";DRIVER={{{GetAccessDriverName()}}}" +
             ";UID=admin" +
             $";pwd={password}" +
             ";UserCommitSync=Yes" +

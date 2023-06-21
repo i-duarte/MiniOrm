@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniOrm.Common", "MiniOrm.Common\MiniOrm.Common.csproj", "{11C4385B-0D55-4A98-853B-FE27C25AC9B7}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrm.SqlLiteNf", "MiniOrm.SqlLiteNf\MiniOrm.SqlLiteNf.csproj", "{D9D14546-3311-4DBA-99E6-E036E3E07EB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrm.MsAccessNf", "MiniOrm.MsAccessNf\MiniOrm.MsAccessNf.csproj", "{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocoClassGen.MsAccess", "PocoClassGen.MsAccess\PocoClassGen.MsAccess.csproj", "{BD094302-A1ED-4F17-AFCD-057989E739C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18A4FF03-E8D0-4654-B9A2-C39DBAC715A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD094302-A1ED-4F17-AFCD-057989E739C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD094302-A1ED-4F17-AFCD-057989E739C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD094302-A1ED-4F17-AFCD-057989E739C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD094302-A1ED-4F17-AFCD-057989E739C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,11 @@ namespace MiniOrm.Sql
     public class SqlObjectFactory :
         IObjectFactory
     {
-        private string StrCnn { get; set; }
+
+        private string DataSource { get; set; }
+        private string DbName { get; set; }
+        private string User { get; set; }
+        private string Password { get; set; }
 
         public SqlObjectFactory(
             string dataSource
@@ -17,13 +21,10 @@ namespace MiniOrm.Sql
             , string password
         )
         {
-            StrCnn = 
-                GetStrConexion(
-                    dataSource
-                    , dataBase
-                    , user
-                    , password
-                );
+            DataSource = dataSource;
+            DbName = dataBase;
+            User = user;
+            Password = password;
         }
 
         public SqlObjectFactory(
@@ -37,34 +38,39 @@ namespace MiniOrm.Sql
         {   
             if(strCnn.Contains("|"))
             {
-                StrCnn = GetStrCnnFromPipeStr(strCnn);
+                var arr = strCnn.Split('|');
+                DataSource = arr[0];
+                DbName = arr[1];
+                switch (arr.Length)
+                {
+                    case 4:
+                        User = arr[2];
+                        Password = arr[3];
+                        break;
+                    default:
+                        throw new Exception("Formato incorrecto de pipeCnn");
+                }
             }
             else
-            { 
-                StrCnn = strCnn; 
+            {
+                throw new Exception("Error en el formato de la cadena de conexion, no se encontraron pipes");
             }
         }
 
-        public DbConnection CreateConnection()
+        public DbConnection CreateConnection(int timeOut = 30)
         {
             var cnn =
-                new SqlConnection(StrCnn);
+                new SqlConnection(
+                    GetStrConexion(
+                        DataSource
+                        , DbName
+                        , User
+                        , Password
+                        , timeOut
+                    )
+                );
             cnn.Open();
             return cnn;
-        }
-
-        private string GetStrCnnFromPipeStr(string pipeCnn)
-        {
-            var arr = pipeCnn.Split('|');
-            switch (arr.Length)
-            {
-                case 2:
-                    return GetStrConexion(arr[0], arr[1], "", "");
-                case 4:
-                    return GetStrConexion(arr[0], arr[1], arr[2], arr[3]);
-                default:
-                    throw new Exception("Formato incorrecto de pipeCnn");
-            }
         }
 
         private string GetStrConexion(

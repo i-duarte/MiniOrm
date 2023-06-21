@@ -16,12 +16,18 @@ namespace MiniOrm.Common
             Add(parameter);
         }
 
-        public ListParameter(IEnumerable<Parameter> list)
+        public ListParameter(
+            IEnumerable<Parameter> list
+            )
         {
             AddRange(list);
         }
 
-        public ListParameter(params (string Nombre, object Valor)[] parametros)
+        public ListParameter(
+            params 
+                (string Nombre, object Valor)[] 
+                parametros
+        )
         {
             foreach (var p in parametros)
             {
@@ -29,7 +35,9 @@ namespace MiniOrm.Common
             }
         }
 
-        public ListParameter(params Parameter[] parametros)
+        public ListParameter(
+            params Parameter[] parametros
+        )
         {
             foreach (var p in parametros)
             {
@@ -51,7 +59,9 @@ namespace MiniOrm.Common
                 }
             );
 
-        internal void Add((string Nombre, object Valor) parametro)
+        internal void Add(
+            (string Nombre, object Valor) parametro
+        )
         {
             Add(parametro.Nombre, parametro.Valor);
         }

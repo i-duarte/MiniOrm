@@ -175,10 +175,16 @@ namespace MiniOrm.EntityFramework
 
         public static string GetTableName(
             Type type
-        ) =>
-            GetTableAttribute(type)
-            ?.Name
-            ?? type.Name;
+        )
+        {
+            var att =
+                GetTableAttribute(type);
+
+            return
+                att == null
+                ? type.Name
+                : $"{att.Schema}.{att.Name}";
+        }
 
         public static T GetEntity<T>(
             DbDataReader dr

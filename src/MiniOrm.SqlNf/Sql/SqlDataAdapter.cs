@@ -152,7 +152,6 @@ namespace MiniOrm.Sql
             new SqlCommand(sql, GetConnection(timeOut))
             .Pipe(c => AddParams(c, parameters));
 
-
         private SqlCommand GetCommand(
             string sql
             , ListParameter parameters
@@ -309,8 +308,6 @@ namespace MiniOrm.Sql
             }
             return cmd;
         }
-
-        
     }
 
 }

@@ -10,8 +10,14 @@ namespace MiniOrm.EntityFramework
             ObjectFactory = objectFactory;
         }
 
+        public DataBase(DataBase db)
+            : this(db.ObjectFactory)
+        {
+        }
+
         public System.Data.Common.DbConnection CreateConnection(
+            int timeOut = 30
         ) => 
-            ObjectFactory.CreateConnection();
+            ObjectFactory.CreateConnection(timeOut);
     }
 }

@@ -11,14 +11,18 @@ namespace MiniOrm.EntityFramework
     {
         protected DataBase DataBase { get; set; }
 
-        protected IObjectFactory ObjectFactory 
-            => DataBase.ObjectFactory;
+        protected IObjectFactory ObjectFactory { get; set; }
         public IDataAdapter DataAdapter
             => ObjectFactory.CreateDataAdapter();
 
-        public DataSource(DataBase db)
+        public DataSource(IObjectFactory objectFactory)
         {
-            DataBase = db;
+            ObjectFactory = objectFactory;
+        }
+
+        public DataSource(DataBase db)
+            :this(db.ObjectFactory)
+        {
         }
 
         protected T GetEntity<T>(
@@ -154,6 +158,11 @@ namespace MiniOrm.EntityFramework
         ) where T : new()
             => GetEntityWithRead<T>(sql, null, tran);
 
+        protected IEnumerable<T> GetEnumerable<T>(
+            string sql
+        ) where T : new() =>
+            GetEnumerable<T>(sql, null, null); 
+        
         protected IEnumerable<T> GetEnumerable<T>(
             string sql
             , params (string nombre, object valor)[] parameters

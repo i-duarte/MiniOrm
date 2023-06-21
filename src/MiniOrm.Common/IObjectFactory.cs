@@ -4,7 +4,7 @@ namespace MiniOrm.Common
 {
     public interface IObjectFactory
     {
-        DbConnection CreateConnection();
+        DbConnection CreateConnection(int timeOut = 30);
         IDataAdapter CreateDataAdapter();
         IEntityAdapter CreateEntityAdapter<T>() where T : new();
         ITableAdapter CreateTableAdapter<T>() where T : new();
