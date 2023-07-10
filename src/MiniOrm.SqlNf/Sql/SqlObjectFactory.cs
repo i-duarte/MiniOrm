@@ -86,7 +86,8 @@ namespace MiniOrm.Sql
                 + $"Database={dbName};"
                 + GetLoginCnnStr(user, password)
                 + "Pooling=false;" 
-                + $"connection timeout={timeOut};"
+                + $"connection timeout={timeOut};" 
+                + "encrypt=false;"
                 ;
 
         private string GetLoginCnnStr(

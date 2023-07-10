@@ -90,6 +90,32 @@ namespace MiniOrm.EntityFramework
 
         public int Update(
             T entity
+            , DbTransaction tran
+        )
+        {
+            var parameters =
+                EntityHelper.GetParameters(entity)
+                ;
+            var nonIdentityParams =
+                EntityHelper.GetNonIdentityParameters(entity);
+
+            var keyParameters =
+                EntityHelper.GetKeyParameters(entity)
+                ;
+
+            var sql =
+                TableAdapter
+                .CreateQueryUpdate(
+                    EntityHelper.GetTableName(typeof(T))
+                    , nonIdentityParams
+                    , keyParameters
+                );
+
+            return TableAdapter.Execute(sql, parameters, tran);
+        }
+
+        public int Update(
+            T entity
             , DbConnection cnn = null
         )
         {
