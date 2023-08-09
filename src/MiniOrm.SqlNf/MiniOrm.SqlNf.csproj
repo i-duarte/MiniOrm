@@ -84,11 +84,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\MyLib.Data\src\MyLib.Extensions\MyLib.Extensions.csproj">
-      <Project>{507420AA-11CC-48A3-9430-064804402E14}</Project>
-      <Name>MyLib.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
